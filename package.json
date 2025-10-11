@@ -1,0 +1,21 @@
+{
+  "name": "days-calendar-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "http-server . -c-1 -p 3000",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnuarKadir/Days-calendar-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AnuarKadir/Days-calendar-project/issues"
+  },
+  "homepage": "https://github.com/AnuarKadir/Days-calendar-project#readme"
+}
