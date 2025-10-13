@@ -1,19 +1,21 @@
-// This is a placeholder file which shows how you can access functions and data defined in other files.
-// It can be loaded into index.html.
-// Note that when running locally, in order to open a web page which uses modules, you must serve the directory over HTTP e.g. with https://www.npmjs.com/package/http-server
-// You can't open the index.html file using a file:// URL.
+// This file handles the web page functionality
+// It uses the functions from common.mjs to display the calendar
 
-import { getGreeting } from "./common.mjs";
-import daysData from "./days.json" with { type: "json" };
+import { getCommemorationForDate } from "./common.mjs";
 
-window.onload = function() {
-    // document.querySelector("body").innerText = `${getGreeting()} - there are ${daysData.length} known days`;
-}
-
-// web.mjs
 const monthNames = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 let currentDate = new Date();
@@ -29,38 +31,89 @@ const prevBtn = document.querySelector("button:nth-of-type(1)");
 const nextBtn = document.querySelector("button:nth-of-type(2)");
 const goBtn = document.querySelector("button:nth-of-type(3)");
 
+let daysData = [];
+
+// Using fetch to load the JSON file
+async function loadDaysData() {
+  try {
+    const response = await fetch("./days.json");
+    daysData = await response.json();
+    // After loading data, render the initial calendar
+    renderCalendar(currentMonth, currentYear);
+  } catch (error) {
+    console.error("Error loading days.json:", error);
+    daysData = [];
+  }
+}
+
 function renderCalendar(month, year) {
-  // 1️⃣ Clear old rows (except header)
-  table.querySelectorAll("tr:not(:first-child)").forEach(row => row.remove());
+  if (daysData.length === 0) return;
+  // Clear old rows (except header)
+  table.querySelectorAll("tr:not(:first-child)").forEach((row) => row.remove());
 
-  // 2️⃣ Update heading
-  monthYearHeading.textContent = `${monthNames[month]} ${year}`;
+  // Update heading
+  monthYearHeading.innerHTML = `<b>${monthNames[month]} ${year}</b>`;
 
-  // 3️⃣ Calculate first and last day
+  // Update the dropdown selectors
+  monthSelect.value = month;
+  yearSelect.value = year;
+
+  //Calculate first and last day
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
 
-  // 4️⃣ Find Monday-based index
+  //Find Monday-based index
   let startDay = (firstDay.getDay() + 6) % 7; // Monday = 0
   let daysInMonth = lastDay.getDate();
 
-  // 5️⃣ Generate rows
+  //Generate rows
+  // We need up to 6 rows to show all possible days
   let date = 1;
   for (let i = 0; i < 6; i++) {
     const row = document.createElement("tr");
+    // Each row has 7 cells (one for each day of the week)
     for (let j = 0; j < 7; j++) {
       const cell = document.createElement("td");
+      // Add styling to cells
+      cell.style.padding = "10px";
+      cell.style.verticalAlign = "top";
+      cell.style.minHeight = "100px";
       if (i === 0 && j < startDay) {
-        cell.textContent = "";
+        cell.style.backgroundColor = "#f0f0f0";
       } else if (date > daysInMonth) {
-        cell.textContent = "";
+        cell.style.backgroundColor = "#f0f0f0";
       } else {
-        cell.textContent = date;
+        const dayDiv = document.createElement("div");
+        dayDiv.style.fontWeight = "bold";
+        dayDiv.textContent = date;
+        cell.appendChild(dayDiv);
+        // Check for commemorations on this date
+        const commemoration = getCommemorationForDate(
+          daysData,
+          year,
+          month,
+          date
+        );
+        if (commemoration) {
+          const commDiv = document.createElement("div");
+          commDiv.style.marginTop = "5px";
+          commDiv.style.fontSize = "12px";
+          commDiv.style.color = "#0066cc";
+          commDiv.style.backgroundColor = "#e6f2ff";
+          commDiv.style.padding = "5px";
+          commDiv.style.borderRadius = "3px";
+          commDiv.textContent = commemoration.name;
+          cell.appendChild(commDiv);
+        }
         date++;
       }
+
       row.appendChild(cell);
     }
     table.appendChild(row);
+
+    // Stop creating rows if we've finished all days
+    if (date > daysInMonth) break;
   }
 }
 
@@ -90,6 +143,7 @@ monthNames.forEach((name, i) => {
   option.textContent = name;
   monthSelect.appendChild(option);
 });
+
 for (let y = 1900; y <= 2100; y++) {
   const option = document.createElement("option");
   option.value = y;
@@ -98,10 +152,10 @@ for (let y = 1900; y <= 2100; y++) {
 }
 
 goBtn.addEventListener("click", () => {
-  const m = parseInt(monthSelect.value);
-  const y = parseInt(yearSelect.value);
-  renderCalendar(m, y);
+  currentMonth = parseInt(monthSelect.value);
+  currentYear = parseInt(yearSelect.value);
+  renderCalendar(currentMonth, currentYear);
 });
 
 // Load initial view
-renderCalendar(currentMonth, currentYear);
+loadDaysData();

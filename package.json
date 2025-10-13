@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "http-server . -c-1 -p 3000",
-    "test": "jest"
+    "test": "node --test"
   },
   "repository": {
     "type": "git",
@@ -17,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/AnuarKadir/Days-calendar-project/issues"
   },
-  "homepage": "https://github.com/AnuarKadir/Days-calendar-project#readme"
+  "homepage": "https://github.com/AnuarKadir/Days-calendar-project#readme",
+  "devDependencies": {
+    "jest": "^30.2.0"
+  }
 }
