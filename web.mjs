@@ -27,9 +27,9 @@ const monthYearHeading = document.querySelector("h1");
 const monthSelect = document.querySelector("#month");
 const yearSelect = document.querySelector("#year");
 const table = document.querySelector("table");
-const prevBtn = document.querySelector("button:nth-of-type(1)");
-const nextBtn = document.querySelector("button:nth-of-type(2)");
-const goBtn = document.querySelector("button:nth-of-type(3)");
+const prevBtn = document.querySelector("#prevBtn");
+const nextBtn = document.querySelector("#nextBtn");
+const goBtn = document.querySelector("#goBtn");
 
 let daysData = [];
 
