@@ -42,3 +42,8 @@ td.muted {
   padding: 5px;
   max-width: 100%;
 }
+
+td.today {
+  outline: 1px solid #2563eb;
+  background-color: #2563eb;
+}
