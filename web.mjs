@@ -49,10 +49,11 @@ async function loadDaysData() {
 function renderCalendar(month, year) {
   if (daysData.length === 0) return;
   // Clear old rows (except header)
-  table.querySelectorAll("tr:not(:first-child)").forEach((row) => row.remove());
+  const tbody = table.tBodies[0] || table.createTBody();
+  tbody.innerHTML = "";
 
   // Update heading
-  monthYearHeading.innerHTML = `<b>${monthNames[month]} ${year}</b>`;
+  monthYearHeading.textContent = `${monthNames[month]} ${year}`;
 
   // Update the dropdown selectors
   monthSelect.value = month;
@@ -74,17 +75,14 @@ function renderCalendar(month, year) {
     // Each row has 7 cells (one for each day of the week)
     for (let j = 0; j < 7; j++) {
       const cell = document.createElement("td");
-      // Add styling to cells
-      cell.style.padding = "10px";
-      cell.style.verticalAlign = "top";
-      cell.style.minHeight = "100px";
+      cell.classList.add("cell");
       if (i === 0 && j < startDay) {
-        cell.style.backgroundColor = "#f0f0f0";
+        cell.classList.add("muted");
       } else if (date > daysInMonth) {
-        cell.style.backgroundColor = "#f0f0f0";
+        cell.classList.add("muted");
       } else {
         const dayDiv = document.createElement("div");
-        dayDiv.style.fontWeight = "bold";
+        dayDiv.classList.add("day");
         dayDiv.textContent = date;
         cell.appendChild(dayDiv);
         // Check for commemorations on this date
@@ -96,12 +94,7 @@ function renderCalendar(month, year) {
         );
         if (commemoration) {
           const commDiv = document.createElement("div");
-          commDiv.style.marginTop = "5px";
-          commDiv.style.fontSize = "12px";
-          commDiv.style.color = "#0066cc";
-          commDiv.style.backgroundColor = "#e6f2ff";
-          commDiv.style.padding = "5px";
-          commDiv.style.borderRadius = "3px";
+          commDiv.classList.add("badge");
           commDiv.textContent = commemoration.name;
           cell.appendChild(commDiv);
         }
@@ -110,7 +103,7 @@ function renderCalendar(month, year) {
 
       row.appendChild(cell);
     }
-    table.appendChild(row);
+    tbody.appendChild(row);
 
     // Stop creating rows if we've finished all days
     if (date > daysInMonth) break;

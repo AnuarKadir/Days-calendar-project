@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Days calendar project</title>
-    <script type="module" src="common.mjs"></script>
+    <link rel="stylesheet" href="styles.css" />
     <script type="module" src="web.mjs"></script>
   </head>
   <body>
-    <h1 id="title"><b>Loading</b></h1>
+    <h1 id="title">Loading</h1>
 
     <br />
 
@@ -31,16 +31,19 @@
 
     <br /><br /><br />
 
-    <table border="1" width="100%">
-      <tr style="background-color: lightgray">
-        <th>Mon</th>
-        <th>Tue</th>
-        <th>Wed</th>
-        <th>Thu</th>
-        <th>Fri</th>
-        <th>Sat</th>
-        <th>Sun</th>
-      </tr>
+    <table class="calendar">
+      <thead>
+        <tr>
+          <th>Mon</th>
+          <th>Tue</th>
+          <th>Wed</th>
+          <th>Thu</th>
+          <th>Fri</th>
+          <th>Sat</th>
+          <th>Sun</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
     </table>
   </body>
 </html>
