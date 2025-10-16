@@ -67,24 +67,38 @@ function renderCalendar(month, year) {
   let startDay = (firstDay.getDay() + 6) % 7; // Monday = 0
   let daysInMonth = lastDay.getDate();
 
+  // Highlight today's date if in the current month/year
+  const now = new Date();
+  const isTodayMonth = year === now.getFullYear() && month === now.getMonth();
+
   //Generate rows
   // We need up to 6 rows to show all possible days
   let date = 1;
   for (let i = 0; i < 6; i++) {
     const row = document.createElement("tr");
     // Each row has 7 cells (one for each day of the week)
+
     for (let j = 0; j < 7; j++) {
       const cell = document.createElement("td");
       cell.classList.add("cell");
-      if (i === 0 && j < startDay) {
-        cell.classList.add("muted");
-      } else if (date > daysInMonth) {
+
+      const beforeStart = i === 0 && j < startDay;
+      const afterEnd = date > daysInMonth;
+
+      if (beforeStart || afterEnd) {
         cell.classList.add("muted");
       } else {
         const dayDiv = document.createElement("div");
         dayDiv.classList.add("day");
         dayDiv.textContent = date;
         cell.appendChild(dayDiv);
+
+        // Highlight today's date
+        if (isTodayMonth && date === now.getDate()) {
+          cell.classList.add("today");
+          cell.setAttribute("aria-current", "date");
+        }
+
         // Check for commemorations on this date
         const commemoration = getCommemorationForDate(
           daysData,

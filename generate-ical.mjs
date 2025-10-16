@@ -3,7 +3,7 @@
 
 import fs from "fs";
 import daysData from "./days.json" with { type: "json" };
-import { calculateCommemorationDate } from "./common.mjs";
+import { calculateCommemorationDate, getMonthNumber } from "./common.mjs";
 
 function generateICS() {
   let icsContent = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Commemorative Days Calendar//EN\n`;
@@ -17,14 +17,20 @@ function generateICS() {
         day.occurrence
       );
 
-      const month = String(
-        new Date(`${day.monthName} 1, ${year}`).getMonth() + 1
-      ).padStart(2, "0");
 
+      /* Format date as YYYYMMDD
+       Month is 0-based in JS Date, so add 1 and pad with leading zero
+       Day is also padded with leading zero
+       E.g., 2024-10-08 -> 20241008
+       */
+      
+      const month = String(getMonthNumber(day.monthName) + 1).padStart(2, "0");
       const dayStr = String(dayNumber).padStart(2, "0");
       const date = `${year}${month}${dayStr}`;
 
-      icsContent += `BEGIN:VEVENT\n`;
+
+
+     icsContent += `BEGIN:VEVENT\n`;
       icsContent += `SUMMARY:${day.name}\n`;
       icsContent += `DTSTART;VALUE=DATE:${date}\n`;
       icsContent += `DTEND;VALUE=DATE:${date}\n`;
